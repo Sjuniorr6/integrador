@@ -1,0 +1,199 @@
+{% extends "usuarios/base.html" %}
+
+{% block title %}
+    {% if form.instance.pk %}Editar{% else %}Nova{% endif %} Tecnologia
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        {% if form.instance.pk %}Editar{% else %}Nova{% endif %} Tecnologia
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.nome_da_conta.id_for_label }}" class="form-label">
+                                    {{ form.nome_da_conta.label }}
+                                </label>
+                                {{ form.nome_da_conta }}
+                                {% if form.nome_da_conta.errors %}
+                                    <div class="text-danger">{{ form.nome_da_conta.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.ip_da_integracao.id_for_label }}" class="form-label">
+                                    {{ form.ip_da_integracao.label }}
+                                </label>
+                                {{ form.ip_da_integracao }}
+                                {% if form.ip_da_integracao.errors %}
+                                    <div class="text-danger">{{ form.ip_da_integracao.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.tecnologia.id_for_label }}" class="form-label">
+                                    {{ form.tecnologia.label }}
+                                </label>
+                                {{ form.tecnologia }}
+                                {% if form.tecnologia.errors %}
+                                    <div class="text-danger">{{ form.tecnologia.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.status.id_for_label }}" class="form-label">
+                                    {{ form.status.label }}
+                                </label>
+                                {{ form.status }}
+                                {% if form.status.errors %}
+                                    <div class="text-danger">{{ form.status.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label for="{{ form.tolerancia_tempo_sem_resposta.id_for_label }}" class="form-label">
+                                    {{ form.tolerancia_tempo_sem_resposta.label }}
+                                </label>
+                                {{ form.tolerancia_tempo_sem_resposta }}
+                                {% if form.tolerancia_tempo_sem_resposta.errors %}
+                                    <div class="text-danger">{{ form.tolerancia_tempo_sem_resposta.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-3 mb-3">
+                                <label for="{{ form.tolerancia_de_envio_de_comandos.id_for_label }}" class="form-label">
+                                    {{ form.tolerancia_de_envio_de_comandos.label }}
+                                </label>
+                                {{ form.tolerancia_de_envio_de_comandos }}
+                                {% if form.tolerancia_de_envio_de_comandos.errors %}
+                                    <div class="text-danger">{{ form.tolerancia_de_envio_de_comandos.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-3 mb-3">
+                                <label for="{{ form.quantidade_de_erros_simuntaneos.id_for_label }}" class="form-label">
+                                    {{ form.quantidade_de_erros_simuntaneos.label }}
+                                </label>
+                                {{ form.quantidade_de_erros_simuntaneos }}
+                                {% if form.quantidade_de_erros_simuntaneos.errors %}
+                                    <div class="text-danger">{{ form.quantidade_de_erros_simuntaneos.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-3 mb-3">
+                                <label for="{{ form.tempo_aguardar_retorno.id_for_label }}" class="form-label">
+                                    {{ form.tempo_aguardar_retorno.label }}
+                                </label>
+                                {{ form.tempo_aguardar_retorno }}
+                                {% if form.tempo_aguardar_retorno.errors %}
+                                    <div class="text-danger">{{ form.tempo_aguardar_retorno.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.inicio_horario_tolerancia.id_for_label }}" class="form-label">
+                                    {{ form.inicio_horario_tolerancia.label }}
+                                </label>
+                                {{ form.inicio_horario_tolerancia }}
+                                {% if form.inicio_horario_tolerancia.errors %}
+                                    <div class="text-danger">{{ form.inicio_horario_tolerancia.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.fim_horario_tolerancia.id_for_label }}" class="form-label">
+                                    {{ form.fim_horario_tolerancia.label }}
+                                </label>
+                                {{ form.fim_horario_tolerancia }}
+                                {% if form.fim_horario_tolerancia.errors %}
+                                    <div class="text-danger">{{ form.fim_horario_tolerancia.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.caminho_aplicacao.id_for_label }}" class="form-label">
+                                {{ form.caminho_aplicacao.label }}
+                            </label>
+                            {{ form.caminho_aplicacao }}
+                            {% if form.caminho_aplicacao.errors %}
+                                <div class="text-danger">{{ form.caminho_aplicacao.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.empresa_contato.id_for_label }}" class="form-label">
+                                {{ form.empresa_contato.label }}
+                            </label>
+                            {{ form.empresa_contato }}
+                            {% if form.empresa_contato.errors %}
+                                <div class="text-danger">{{ form.empresa_contato.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    {{ form.monitorado_guardiao }}
+                                    <label class="form-check-label" for="{{ form.monitorado_guardiao.id_for_label }}">
+                                        {{ form.monitorado_guardiao.label }}
+                                    </label>
+                                    {% if form.monitorado_guardiao.errors %}
+                                        <div class="text-danger">{{ form.monitorado_guardiao.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    {{ form.ignorado_monitor_integracoes }}
+                                    <label class="form-check-label" for="{{ form.ignorado_monitor_integracoes.id_for_label }}">
+                                        {{ form.ignorado_monitor_integracoes.label }}
+                                    </label>
+                                    {% if form.ignorado_monitor_integracoes.errors %}
+                                        <div class="text-danger">{{ form.ignorado_monitor_integracoes.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    {{ form.enviar_comandos }}
+                                    <label class="form-check-label" for="{{ form.enviar_comandos.id_for_label }}">
+                                        {{ form.enviar_comandos.label }}
+                                    </label>
+                                    {% if form.enviar_comandos.errors %}
+                                        <div class="text-danger">{{ form.enviar_comandos.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'lista_tecnologias' %}" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">
+                                {% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

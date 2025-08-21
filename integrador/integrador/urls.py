@@ -15,8 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.shortcuts import redirect
+
+def redirect_to_login(request):
+    """Redireciona a página raiz para o login"""
+    return redirect('usuarios:login')
 
 urlpatterns = [
+    path('', redirect_to_login, name='root'),
     path('admin/', admin.site.urls),
+    path('usuarios/', include('usuarios.urls')),
+    path('tecnologias/', include('tecnologias.urls')),
+    path('estacao_rastreamento/', include('estacao_rastreamento.urls')),
+    path('cadastro_de_motivo/', include('cadastro_de_motivo.urls')),
 ]
+

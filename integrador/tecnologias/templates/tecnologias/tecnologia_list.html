@@ -1,0 +1,81 @@
+{% extends "usuarios/base.html" %}
+
+{% block title %}Lista de Tecnologias{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Tecnologias</h1>
+        <a href="{% url 'criar_tecnologia' %}" class="btn btn-primary">Nova Tecnologia</a>
+    </div>
+
+    {% if page_obj %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nome da Conta</th>
+                        <th>IP da Integração</th>
+                        <th>Tecnologia</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tecnologia in page_obj %}
+                    <tr>
+                        <td>{{ tecnologia.nome_da_conta }}</td>
+                        <td>{{ tecnologia.ip_da_integracao }}</td>
+                        <td>{{ tecnologia.tecnologia }}</td>
+                        <td>
+                            <span class="badge {% if tecnologia.status == 'ativo' %}bg-success{% else %}bg-secondary{% endif %}">
+                                {{ tecnologia.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'detalhar_tecnologia' tecnologia.pk %}" class="btn btn-sm btn-info">Ver</a>
+                            <a href="{% url 'editar_tecnologia' tecnologia.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                            <a href="{% url 'excluir_tecnologia' tecnologia.pk %}" class="btn btn-sm btn-danger">Excluir</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if is_paginated %}
+        <nav aria-label="Paginação">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">&laquo; Primeira</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">
+                        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info">
+            Nenhuma tecnologia cadastrada ainda.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
