@@ -16,7 +16,24 @@ class CadastroDeMotivoForm(forms.ModelForm):
             "Status": "Status",
         }
         widgets = {
-            "descricao": forms.TextInput(attrs={"class": "form-control", "placeholder": "Digite a descrição"}),
-            "Tipo_de_motivo": forms.Select(attrs={"class": "form-select"}),
-            "Status": forms.Select(attrs={"class": "form-select"}),
+            "descricao": forms.Textarea(attrs={
+                "class": "form-control", 
+                "placeholder": "Digite a descrição do motivo",
+                "rows": 3
+            }),
+            "Tipo_de_motivo": forms.Select(attrs={
+                "class": "form-select",
+                "aria-label": "Selecione o tipo de motivo"
+            }),
+            "Status": forms.Select(attrs={
+                "class": "form-select",
+                "aria-label": "Selecione o status"
+            }),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Add Bootstrap classes to all fields
+        for field_name, field in self.fields.items():
+            if 'class' not in field.widget.attrs:
+                field.widget.attrs['class'] = 'form-control'

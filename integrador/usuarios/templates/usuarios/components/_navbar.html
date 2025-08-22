@@ -19,10 +19,20 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="tecnologiasDropdown">
                         <li><a class="dropdown-item" href="{% url 'lista_tecnologias' %}">
-                            <i class="fas fa-list me-2"></i>Cadastro de Tecnologias
+                            <i class="fas fa-microchip me-2"></i>Cadastro de Tecnologias
                         </a></li>
-                      
-                       
+                        <li><a class="dropdown-item" href="{% url 'Motivo_list' %}">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Cadastro de Motivos
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'cadastro_de_tipo_nao_conformidade_list' %}">
+                            <i class="fas fa-exclamation-circle me-2"></i>Tipos de Não Conformidade
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'cadastro_de_tratamento_de_evento_list' %}">
+                            <i class="fas fa-clipboard-list me-2"></i>Tratamentos de Eventos
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'estacao_rastreamento_list' %}">
+                            <i class="fas fa-satellite me-2"></i>Estações de Rastreamento
+                        </a></li>
                     </ul>
                 </div>
                 <a class="nav-link" href="{% url 'admin:logout' %}">
