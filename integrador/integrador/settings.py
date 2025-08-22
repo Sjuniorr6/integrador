@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'usuarios',
     'tecnologias',
-    'estacao_rastreamento'
-    'cadastro_de_motivo'
+    'estacao_rastreamento',
+    'cadastro_de_motivo',
+    'cadastro_de_tipo_nao_conformidade',
+    'cadastro_de_tratamento_de_evento',
 ]
 
 MIDDLEWARE = [
