@@ -1,0 +1,325 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+
+{% block title %}Lista de Tratamentos de Eventos{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-clipboard-list me-2"></i>
+                        Lista de Tratamentos de Eventos
+                    </h4>
+                    <a href="{% url 'cadastro_de_tratamento_de_evento' %}" class="btn btn-light">
+                        <i class="fas fa-plus me-1"></i>Novo Tratamento
+                    </a>
+                </div>
+                <div class="card-body">
+                    <!-- Statistics Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card bg-info text-white">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-list me-2"></i>Total
+                                    </h5>
+                                    <h3 class="mb-0">{{ total_tratamentos }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-success text-white">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-check-circle me-2"></i>Ativos
+                                    </h5>
+                                    <h3 class="mb-0">{{ tratamentos_ativos }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-danger text-white">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-times-circle me-2"></i>Inativos
+                                    </h5>
+                                    <h3 class="mb-0">{{ tratamentos_inativos }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input type="text" id="searchInput" class="form-control" placeholder="Buscar por descrição...">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <select id="tipoFilter" class="form-select">
+                                <option value="">Todos os tipos</option>
+                                <option value="Emergência">Emergência</option>
+                                <option value="Urgente">Urgente</option>
+                                <option value="Normal">Normal</option>
+                                <option value="Baixa Prioridade">Baixa Prioridade</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">
+                                        <i class="fas fa-align-left me-1"></i>Descrição
+                                    </th>
+                                    <th scope="col">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>Tipo de Evento
+                                    </th>
+                                    <th scope="col">
+                                        <i class="fas fa-user me-1"></i>Responsável
+                                    </th>
+                                    <th scope="col">
+                                        <i class="fas fa-clock me-1"></i>Tempo Estimado
+                                    </th>
+                                    <th scope="col">
+                                        <i class="fas fa-toggle-on me-1"></i>Status
+                                    </th>
+                                    <th scope="col">
+                                        <i class="fas fa-calendar me-1"></i>Data Criação
+                                    </th>
+                                    <th scope="col">
+                                        <i class="fas fa-cogs me-1"></i>Ações
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tratamento in tratamentos_evento %}
+                                <tr>
+                                    <td>{{ tratamento.id }}</td>
+                                    <td>{{ tratamento.descricao }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ tratamento.tipo_evento_color }}">
+                                            {{ tratamento.tipo_evento }}
+                                        </span>
+                                    </td>
+                                    <td>{{ tratamento.responsavel }}</td>
+                                    <td>{{ tratamento.tempo_estimado }}</td>
+                                    <td>
+                                        {% if tratamento.status == "Ativo" %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i>{{ tratamento.status }}
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-times-circle me-1"></i>{{ tratamento.status }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            {{ tratamento.data_criacao|date:"d/m/Y H:i" }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#tratamentoModal{{ tratamento.id }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <a href="{% url 'edit_tratamento_evento' tratamento.id %}" class="btn btn-sm btn-outline-info">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                                    onclick="confirmDelete({{ tratamento.id }}, '{{ tratamento.descricao|escapejs }}')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Modal for details -->
+                                <div class="modal fade" id="tratamentoModal{{ tratamento.id }}" tabindex="-1" aria-labelledby="tratamentoModalLabel{{ tratamento.id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-info text-white">
+                                                <h5 class="modal-title" id="tratamentoModalLabel{{ tratamento.id }}">
+                                                    <i class="fas fa-info-circle me-2"></i>Detalhes do Tratamento de Evento
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="mb-3">
+                                                            <strong>ID:</strong> {{ tratamento.id }}
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <strong>Descrição:</strong><br>
+                                                            {{ tratamento.descricao }}
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <strong>Tipo de Evento:</strong>
+                                                            <span class="badge bg-{{ tratamento.tipo_evento_color }} ms-2">
+                                                                {{ tratamento.tipo_evento }}
+                                                            </span>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <strong>Procedimento de Tratamento:</strong><br>
+                                                            {{ tratamento.procedimento }}
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <strong>Responsável:</strong> {{ tratamento.responsavel }}
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <strong>Tempo Estimado:</strong> {{ tratamento.tempo_estimado }}
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <strong>Status:</strong>
+                                                            {% if tratamento.status == "Ativo" %}
+                                                                <span class="badge bg-success ms-2">
+                                                                    <i class="fas fa-check-circle me-1"></i>{{ tratamento.status }}
+                                                                </span>
+                                                            {% else %}
+                                                                <span class="badge bg-danger ms-2">
+                                                                    <i class="fas fa-times-circle me-1"></i>{{ tratamento.status }}
+                                                                </span>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <strong>Data de Criação:</strong> {{ tratamento.data_criacao|date:"d/m/Y H:i" }}
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <strong>Última Atualização:</strong> {{ tratamento.data_atualizacao|date:"d/m/Y H:i" }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted">
+                                        <i class="fas fa-inbox fa-3x mb-3"></i>
+                                        <p>Nenhum tratamento de evento encontrado.</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if is_paginated %}
+                    <nav aria-label="Navegação de páginas">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1">
+                                        <i class="fas fa-angle-double-left"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                        <i class="fas fa-angle-left"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                                </span>
+                            </li>
+
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                        <i class="fas fa-angle-right"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                                        <i class="fas fa-angle-double-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Search functionality
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const searchTerm = this.value.toLowerCase();
+    const tableRows = document.querySelectorAll('tbody tr');
+    
+    tableRows.forEach(function(row) {
+        const description = row.cells[1].textContent.toLowerCase();
+        if (description.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+
+// Type filter
+document.getElementById('tipoFilter').addEventListener('change', function() {
+    const selectedType = this.value;
+    const tableRows = document.querySelectorAll('tbody tr');
+    
+    tableRows.forEach(function(row) {
+        const typeCell = row.cells[2];
+        const type = typeCell.textContent.trim();
+        
+        if (selectedType === '' || type.includes(selectedType)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+
+// Delete confirmation
+function confirmDelete(tratamentoId, descricao) {
+    if (confirm('Tem certeza que deseja excluir o tratamento de evento: "' + descricao + '"?')) {
+        // Create a form to submit the delete request
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/cadastro_de_tratamento_de_evento/excluir/' + tratamentoId + '/';
+        
+        // Add CSRF token
+        var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        var csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+{% endblock %}
