@@ -31,5 +31,6 @@ urlpatterns = [
     path('cadastro_de_motivo/', include('cadastro_de_motivo.urls')),
     path('cadastro_de_tipo_nao_conformidade/', include('cadastro_de_tipo_nao_conformidade.urls')),
     path('cadastro_de_tratamento_de_evento/', include('cadastro_de_tratamento_de_evento.urls')),
+    path('versao_da_tecnologia/', include('versao_da_tecnologia.urls')),
 ]
 
