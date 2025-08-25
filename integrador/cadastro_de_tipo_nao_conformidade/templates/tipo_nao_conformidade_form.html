@@ -1,0 +1,121 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+
+{% block title %}Cadastro de Tipo de Não Conformidade{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">
+                        {% if object %}
+                            <i class="fas fa-edit me-2"></i>
+                            Editar Tipo de Não Conformidade
+                        {% else %}
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Cadastro de Tipo de Não Conformidade
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.descricao.id_for_label }}" class="form-label">
+                                <i class="fas fa-align-left me-1"></i>{{ form.descricao.label }}
+                            </label>
+                            {{ form.descricao }}
+                            {% if form.descricao.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.descricao.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.nivel_de_importancia.id_for_label }}" class="form-label">
+                                <i class="fas fa-exclamation-circle me-1"></i>{{ form.nivel_de_importancia.label }}
+                            </label>
+                            {{ form.nivel_de_importancia }}
+                            {% if form.nivel_de_importancia.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.nivel_de_importancia.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.acao_a_realizar.id_for_label }}" class="form-label">
+                                <i class="fas fa-tasks me-1"></i>{{ form.acao_a_realizar.label }}
+                            </label>
+                            {{ form.acao_a_realizar }}
+                            {% if form.acao_a_realizar.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.acao_a_realizar.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.processo_administrativo }}
+                                <label class="form-check-label" for="{{ form.processo_administrativo.id_for_label }}">
+                                    <i class="fas fa-file-alt me-1"></i>{{ form.processo_administrativo.label }}
+                                </label>
+                                {% if form.processo_administrativo.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.processo_administrativo.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'cadastro_de_tipo_nao_conformidade_list' %}" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left me-1"></i>Voltar
+                            </a>
+                            <button type="submit" class="btn btn-warning">
+                                {% if object %}
+                                    <i class="fas fa-save me-1"></i>Atualizar
+                                {% else %}
+                                    <i class="fas fa-save me-1"></i>Salvar
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Bootstrap form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
+{% endblock %}
