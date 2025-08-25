@@ -1,0 +1,370 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+
+{% block title %}Versões da Tecnologia{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">
+                <i class="fas fa-microchip text-primary me-2"></i>Versões da Tecnologia
+            </h2>
+            <p class="text-muted mb-0">Gerencie as versões de tecnologia do sistema</p>
+        </div>
+        <a href="{% url 'versao_da_tecnologia' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i>Nova Versão
+        </a>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total de Versões
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_tecnologias }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-microchip fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Homologadas para Risco
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ homologadas_risco }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-shield-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Homologadas para Logística
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ homologadas_logistica }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-truck fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Última Atualização
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Hoje</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="searchInput" class="form-label">
+                        <i class="fas fa-search me-1"></i>Buscar por descrição
+                    </label>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Digite para buscar...">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="filterComunicacao" class="form-label">
+                        <i class="fas fa-filter me-1"></i>Filtrar por comunicação
+                    </label>
+                    <select class="form-select" id="filterComunicacao">
+                        <option value="">Todas as comunicações</option>
+                        <option value="Satelital">Satelital</option>
+                        <option value="Hibrido">Híbrido</option>
+                        <option value="Grupo GPRS">Grupo GPRS</option>
+                        <option value="Prime">Prime</option>
+                        <option value="LBS">LBS</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover" id="tecnologiasTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Descrição</th>
+                            <th>Versão</th>
+                            <th>Comunicação</th>
+                            <th>Tempo Satelital</th>
+                            <th>Tempo GPRS</th>
+                            <th>Configurações</th>
+                            <th>Data Criação</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tecnologia in tecnologias %}
+                        <tr>
+                            <td>{{ tecnologia.id }}</td>
+                            <td>{{ tecnologia.descricao }}</td>
+                            <td>
+                                <span class="badge bg-secondary">{{ tecnologia.versao }}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ tecnologia.comunicacao_color }}">
+                                    {{ tecnologia.comunicacao }}
+                                </span>
+                            </td>
+                            <td>{{ tecnologia.tempo_satelital }}s</td>
+                            <td>{{ tecnologia.tempo_gprs }}s</td>
+                            <td>
+                                {% if tecnologia.homologado_para_risco %}
+                                    <span class="badge bg-success me-1" title="Homologado para Risco">
+                                        <i class="fas fa-shield-alt"></i> Risco
+                                    </span>
+                                {% endif %}
+                                {% if tecnologia.homologado_para_logistica %}
+                                    <span class="badge bg-info me-1" title="Homologado para Logística">
+                                        <i class="fas fa-truck"></i> Logística
+                                    </span>
+                                {% endif %}
+                                {% if tecnologia.permitir_mensagem_livre %}
+                                    <span class="badge bg-warning" title="Permite Mensagem Livre">
+                                        <i class="fas fa-comment"></i> Mensagem
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>{{ tecnologia.data_criacao|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-sm btn-outline-info" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#tecnologiaModal{{ tecnologia.id }}"
+                                            title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <a href="{% url 'versao_da_tecnologia_update' tecnologia.id %}" 
+                                       class="btn btn-sm btn-outline-warning" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                                            onclick="confirmDelete({{ tecnologia.id }}, '{{ tecnologia.descricao }}')"
+                                            title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center text-muted py-4">
+                                <i class="fas fa-inbox fa-3x mb-3"></i>
+                                <p>Nenhuma versão de tecnologia encontrada.</p>
+                                <a href="{% url 'versao_da_tecnologia' %}" class="btn btn-primary">
+                                    <i class="fas fa-plus me-1"></i>Criar primeira versão
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <nav aria-label="Navegação de páginas">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">&laquo; Primeira</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">
+                            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Detail Modals -->
+{% for tecnologia in tecnologias %}
+<div class="modal fade" id="tecnologiaModal{{ tecnologia.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-microchip me-2"></i>Detalhes da Versão
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-info-circle me-1"></i>Informações Básicas</h6>
+                        <p><strong>Descrição:</strong> {{ tecnologia.descricao }}</p>
+                        <p><strong>Versão:</strong> {{ tecnologia.versao }}</p>
+                        <p><strong>Comunicação:</strong> 
+                            <span class="badge bg-{{ tecnologia.comunicacao_color }}">
+                                {{ tecnologia.comunicacao }}
+                            </span>
+                        </p>
+                        <p><strong>Tipo de Comunicação:</strong> {{ tecnologia.tipo_de_comunicacao }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-cog me-1"></i>Configurações</h6>
+                        <p><strong>Tempo Satelital:</strong> {{ tecnologia.tempo_satelital }} segundos</p>
+                        <p><strong>Tempo GPRS:</strong> {{ tecnologia.tempo_gprs }} segundos</p>
+                        <p><strong>Posições Cálculo:</strong> {{ tecnologia.posicoes_calculo_posicionamento }}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-12">
+                        <h6><i class="fas fa-check-circle me-1"></i>Homologações</h6>
+                        <div class="d-flex gap-2">
+                            {% if tecnologia.homologado_para_risco %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-shield-alt me-1"></i>Homologado para Risco
+                                </span>
+                            {% endif %}
+                            {% if tecnologia.homologado_para_logistica %}
+                                <span class="badge bg-info">
+                                    <i class="fas fa-truck me-1"></i>Homologado para Logística
+                                </span>
+                            {% endif %}
+                            {% if tecnologia.permitir_mensagem_livre %}
+                                <span class="badge bg-warning">
+                                    <i class="fas fa-comment me-1"></i>Permite Mensagem Livre
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Data de Criação:</strong> {{ tecnologia.data_criacao|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Última Atualização:</strong> {{ tecnologia.data_atualizacao|date:"d/m/Y H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="{% url 'versao_da_tecnologia_update' tecnologia.id %}" class="btn btn-warning">
+                    <i class="fas fa-edit me-1"></i>Editar
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Delete Confirmation Form -->
+<form id="deleteForm" method="post" style="display: none;">
+    {% csrf_token %}
+</form>
+
+<script>
+// Search functionality
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const searchTerm = this.value.toLowerCase();
+    const table = document.getElementById('tecnologiasTable');
+    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+    for (let row of rows) {
+        const descricao = row.cells[1].textContent.toLowerCase();
+        const versao = row.cells[2].textContent.toLowerCase();
+        
+        if (descricao.includes(searchTerm) || versao.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    }
+});
+
+// Filter functionality
+document.getElementById('filterComunicacao').addEventListener('change', function() {
+    const filterValue = this.value;
+    const table = document.getElementById('tecnologiasTable');
+    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+    for (let row of rows) {
+        const comunicacao = row.cells[3].textContent.trim();
+        
+        if (filterValue === '' || comunicacao === filterValue) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    }
+});
+
+// Delete confirmation
+function confirmDelete(id, descricao) {
+    if (confirm(`Tem certeza que deseja excluir a versão "${descricao}"?`)) {
+        const form = document.getElementById('deleteForm');
+        form.action = `/versao_da_tecnologia/delete/${id}/`;
+        form.submit();
+    }
+}
+</script>
+{% endblock %}
