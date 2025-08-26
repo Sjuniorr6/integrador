@@ -13,7 +13,7 @@ class Cliente(models.Model):
     data_criacao = models.DateTimeField(
         null=True,
         blank=True,
-        verbose_name="Data de Criação"
+        verbose_name="Data de Criação"s
     )
     data_atualizacao = models.DateTimeField(
         null=True,

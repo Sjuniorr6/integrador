@@ -1,156 +1,207 @@
 {% extends 'usuarios/base.html' %}
 
-{% block title %}{% if object %}Editar{% else %}Nova{% endif %} Entrada de Iscas{% endblock %}
+{% block title %}
+    {% if form.instance.pk %}Editar Entrada de Iscas{% else %}Nova Entrada de Iscas{% endif %}
+{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto">
-    <!-- Header -->
-    <div class="mb-8">
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">
-                    {% if object %}Editar{% else %}Nova{% endif %} Entrada de Iscas
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <!-- Header -->
+        <div class="px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600">
+            <div class="flex items-center justify-between">
+                <h1 class="text-xl font-semibold text-white">
+                    <i class="fas fa-box mr-2"></i>
+                    {% if form.instance.pk %}Editar Entrada de Iscas{% else %}Nova Entrada de Iscas{% endif %}
                 </h1>
-                <p class="mt-2 text-gray-600">
-                    {% if object %}
-                        Atualize as informações da entrada de iscas
-                    {% else %}
-                        Cadastre uma nova entrada de iscas no sistema
-                    {% endif %}
-                </p>
+                <a href="{% url 'estoque:entrada_list' %}" 
+                   class="inline-flex items-center px-3 py-1 bg-white bg-opacity-20 hover:bg-opacity-30 text-white rounded-lg transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Voltar
+                </a>
             </div>
-            <a href="{% url 'estoque:entrada_list' %}" 
-               class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
-                <i class="fas fa-arrow-left mr-2"></i>
-                Voltar
-            </a>
         </div>
-    </div>
 
-    <!-- Form Card -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="px-6 py-4 bg-gradient-to-r from-green-500 to-green-600">
-            <h2 class="text-lg font-semibold text-white">
-                <i class="fas fa-fish mr-2"></i>
-                Informações da Entrada
-            </h2>
-        </div>
-        
-        <form method="post" class="p-6 space-y-6">
-            {% csrf_token %}
-            
-            <!-- Cliente Field -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="{{ form.cliente.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                        {{ form.cliente.label }}
-                    </label>
-                    <div class="relative">
-                        {{ form.cliente }}
-                        {% if form.cliente.errors %}
-                            <div class="mt-1 text-red-600 text-sm">{{ form.cliente.errors.0 }}</div>
+        <!-- Form -->
+        <div class="p-6">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Nome -->
+                    <div>
+                        <label for="{{ form.nome.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Nome da Entrada *
+                        </label>
+                        {{ form.nome }}
+                        {% if form.nome.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                {% for error in form.nome.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
                         {% endif %}
                     </div>
-                    <p class="mt-1 text-sm text-gray-500">
-                        Selecione o cliente para esta entrada de iscas
-                    </p>
-                </div>
-                
-                <div class="flex items-end">
-                    <a href="{% url 'estoque:cliente_create' %}" 
-                       class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
-                        <i class="fas fa-plus mr-2"></i>
-                        Novo Cliente
-                    </a>
-                </div>
-            </div>
 
-            <!-- Quantidade and Estoque Mínimo -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="{{ form.quantidade.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                        {{ form.quantidade.label }}
-                    </label>
-                    {{ form.quantidade }}
-                    {% if form.quantidade.errors %}
-                        <div class="mt-1 text-red-600 text-sm">{{ form.quantidade.errors.0 }}</div>
-                    {% endif %}
-                </div>
-                
-                <div>
-                    <label for="{{ form.estoque_minimo.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                        {{ form.estoque_minimo.label }}
-                    </label>
-                    {{ form.estoque_minimo }}
-                    {% if form.estoque_minimo.errors %}
-                        <div class="mt-1 text-red-600 text-sm">{{ form.estoque_minimo.errors.0 }}</div>
-                    {% endif %}
-                </div>
-            </div>
+                    <!-- Cliente -->
+                    <div>
+                        <label for="{{ form.cliente.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Cliente *
+                        </label>
+                        {{ form.cliente }}
+                        {% if form.cliente.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                {% for error in form.cliente.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
 
-            <!-- Lote Fields -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="{{ form.lote_de.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                        {{ form.lote_de.label }}
-                    </label>
-                    {{ form.lote_de }}
-                    {% if form.lote_de.errors %}
-                        <div class="mt-1 text-red-600 text-sm">{{ form.lote_de.errors.0 }}</div>
-                    {% endif %}
-                </div>
-                
-                <div>
-                    <label for="{{ form.lote_ate.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                        {{ form.lote_ate.label }}
-                    </label>
-                    {{ form.lote_ate }}
-                    {% if form.lote_ate.errors %}
-                        <div class="mt-1 text-red-600 text-sm">{{ form.lote_ate.errors.0 }}</div>
-                    {% endif %}
-                </div>
-            </div>
+                    <!-- Quantidade -->
+                    <div>
+                        <label for="{{ form.quantidade.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Quantidade *
+                        </label>
+                        {{ form.quantidade }}
+                        {% if form.quantidade.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                {% for error in form.quantidade.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
 
-            <!-- Data Início Lançamento -->
-            <div>
-                <label for="{{ form.data_inicio_lancamento.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    {{ form.data_inicio_lancamento.label }}
-                </label>
-                {{ form.data_inicio_lancamento }}
-                {% if form.data_inicio_lancamento.errors %}
-                    <div class="mt-1 text-red-600 text-sm">{{ form.data_inicio_lancamento.errors.0 }}</div>
+                    <!-- Status -->
+                    <div>
+                        <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Status *
+                        </label>
+                        {{ form.status }}
+                        {% if form.status.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                {% for error in form.status.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Data de Entrada -->
+                    <div>
+                        <label for="{{ form.data_entrada.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Data de Entrada
+                        </label>
+                        {{ form.data_entrada }}
+                        {% if form.data_entrada.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                {% for error in form.data_entrada.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Lote -->
+                    <div>
+                        <label for="{{ form.lote.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Lote
+                        </label>
+                        {{ form.lote }}
+                        {% if form.lote.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                {% for error in form.lote.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Observações -->
+                <div>
+                    <label for="{{ form.observacoes.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Observações
+                    </label>
+                    {{ form.observacoes }}
+                    {% if form.observacoes.errors %}
+                        <div class="mt-1 text-sm text-red-600">
+                            {% for error in form.observacoes.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Form Errors -->
+                {% if form.non_field_errors %}
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div class="flex">
+                            <i class="fas fa-exclamation-circle text-red-400 mt-1 mr-3"></i>
+                            <div>
+                                <h3 class="text-sm font-medium text-red-800">Erro no formulário</h3>
+                                <div class="mt-2 text-sm text-red-700">
+                                    {% for error in form.non_field_errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 {% endif %}
-            </div>
 
-            <!-- Form Actions -->
-            <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
-                <a href="{% url 'estoque:entrada_list' %}" 
-                   class="px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
-                    Cancelar
-                </a>
-                <button type="submit" 
-                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors hover-lift">
-                    <i class="fas fa-save mr-2"></i>
-                    {% if object %}Atualizar{% else %}Salvar{% endif %}
-                </button>
-            </div>
-        </form>
+                <!-- Buttons -->
+                <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+                    <a href="{% url 'estoque:entrada_list' %}" 
+                       class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+                        <i class="fas fa-times mr-2"></i>
+                        Cancelar
+                    </a>
+                    <button type="submit" 
+                            class="inline-flex items-center px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                        <i class="fas fa-save mr-2"></i>
+                        {% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <style>
-    /* Custom form styling */
-    input, select, textarea {
-        @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors;
-    }
-    
-    input:focus, select:focus, textarea:focus {
-        @apply outline-none;
-    }
-    
-    /* Error state */
-    input.error, select.error, textarea.error {
-        @apply border-red-500 focus:ring-red-500 focus:border-red-500;
-    }
+/* Custom form styling */
+.form-control {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+}
+
+.form-control:focus {
+    @apply outline-none;
+}
+
+textarea.form-control {
+    @apply resize-none;
+    min-height: 100px;
+}
+
+/* Select styling */
+select.form-control {
+    @apply appearance-none bg-white;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+}
+
+/* Date input styling */
+input[type="date"] {
+    @apply appearance-none;
+}
+
+/* Number input styling */
+input[type="number"] {
+    @apply appearance-none;
+}
 </style>
 {% endblock %}
