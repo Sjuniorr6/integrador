@@ -1,6 +1,6 @@
 {% extends 'usuarios/base.html' %}
 
-{% block title %}{% if object %}Editar{% else %}Novo{% endif %} Tipo de Não Conformidade{% endblock %}
+{% block title %}{% if object %}Editar{% else %}Nova{% endif %} Versão da Tecnologia{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto">
@@ -9,17 +9,17 @@
         <div class="flex items-center justify-between">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900">
-                    {% if object %}Editar{% else %}Novo{% endif %} Tipo de Não Conformidade
+                    {% if object %}Editar{% else %}Nova{% endif %} Versão da Tecnologia
                 </h1>
                 <p class="mt-2 text-gray-600">
                     {% if object %}
-                        Atualize as informações do tipo de não conformidade
+                        Atualize as informações da versão da tecnologia
                     {% else %}
-                        Cadastre um novo tipo de não conformidade no sistema
+                        Cadastre uma nova versão da tecnologia no sistema
                     {% endif %}
                 </p>
             </div>
-            <a href="{% url 'cadastro_de_tipo_nao_conformidade_list' %}" 
+            <a href="{% url 'versao_da_tecnologia_list' %}" 
                class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Voltar
@@ -29,10 +29,10 @@
 
     <!-- Form Card -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="px-6 py-4 bg-gradient-to-r from-orange-500 to-orange-600">
+        <div class="px-6 py-4 bg-gradient-to-r from-indigo-500 to-indigo-600">
             <h2 class="text-lg font-semibold text-white">
-                <i class="fas fa-exclamation-circle mr-2"></i>
-                Informações do Tipo de Não Conformidade
+                <i class="fas fa-code-branch mr-2"></i>
+                Informações da Versão da Tecnologia
             </h2>
         </div>
         
@@ -54,7 +54,7 @@
                     <div class="mt-1 text-red-600 text-sm">{{ form.nome.errors.0 }}</div>
                 {% endif %}
                 <p class="mt-1 text-sm text-gray-500">
-                    Digite um nome descritivo para o tipo de não conformidade
+                    Digite um nome descritivo para a versão
                 </p>
             </div>
 
@@ -74,19 +74,67 @@
                 {% endif %}
             </div>
 
-            <!-- Severidade Field -->
+            <!-- Versão Field -->
             <div>
-                <label for="{{ form.severidade.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    {{ form.severidade.label }}
+                <label for="{{ form.versao.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.versao.label }}
                 </label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-exclamation-triangle text-gray-400"></i>
+                        <i class="fas fa-code-branch text-gray-400"></i>
                     </div>
-                    {{ form.severidade }}
+                    {{ form.versao }}
                 </div>
-                {% if form.severidade.errors %}
-                    <div class="mt-1 text-red-600 text-sm">{{ form.severidade.errors.0 }}</div>
+                {% if form.versao.errors %}
+                    <div class="mt-1 text-red-600 text-sm">{{ form.versao.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Tipo Comunicação Field -->
+            <div>
+                <label for="{{ form.tipo_comunicacao.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.tipo_comunicacao.label }}
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-wifi text-gray-400"></i>
+                    </div>
+                    {{ form.tipo_comunicacao }}
+                </div>
+                {% if form.tipo_comunicacao.errors %}
+                    <div class="mt-1 text-red-600 text-sm">{{ form.tipo_comunicacao.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Homologado Risco Field -->
+            <div>
+                <label for="{{ form.homologado_risco.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.homologado_risco.label }}
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-shield-alt text-gray-400"></i>
+                    </div>
+                    {{ form.homologado_risco }}
+                </div>
+                {% if form.homologado_risco.errors %}
+                    <div class="mt-1 text-red-600 text-sm">{{ form.homologado_risco.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Homologado Logística Field -->
+            <div>
+                <label for="{{ form.homologado_logistica.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.homologado_logistica.label }}
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-truck text-gray-400"></i>
+                    </div>
+                    {{ form.homologado_logistica }}
+                </div>
+                {% if form.homologado_logistica.errors %}
+                    <div class="mt-1 text-red-600 text-sm">{{ form.homologado_logistica.errors.0 }}</div>
                 {% endif %}
             </div>
 
@@ -108,12 +156,12 @@
 
             <!-- Form Actions -->
             <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
-                <a href="{% url 'cadastro_de_tipo_nao_conformidade_list' %}" 
+                <a href="{% url 'versao_da_tecnologia_list' %}" 
                    class="px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
                     Cancelar
                 </a>
                 <button type="submit" 
-                        class="px-6 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors hover-lift">
+                        class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors hover-lift">
                     <i class="fas fa-save mr-2"></i>
                     {% if object %}Atualizar{% else %}Salvar{% endif %}
                 </button>
@@ -125,7 +173,7 @@
 <style>
 /* Custom form styling */
 input, select, textarea {
-    @apply w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors;
+    @apply w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors;
 }
 
 input:focus, select:focus, textarea:focus {

@@ -23,7 +23,7 @@ class EstacaoRastreamentoCreateView(CreateView):
 class EstacaoRastreamentoListView(ListView):
     model = EstacaoRastreamento
     template_name = "estacao_rastreamento_list.html"
-    context_object_name = "estacoes_rastreamento"
+    context_object_name = "object_list"
     ordering = ["-data_criacao"]
     paginate_by = 10
     

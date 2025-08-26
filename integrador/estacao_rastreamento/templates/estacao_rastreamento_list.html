@@ -1,273 +1,283 @@
 {% extends 'usuarios/base.html' %}
-{% load static %}
 
-{% block title %}Lista de Estações de Rastreamento{% endblock %}
+{% block title %}Estações de Rastreamento{% endblock %}
 
 {% block content %}
-{% csrf_token %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">
-                        <i class="fas fa-satellite me-2"></i>
-                        Lista de Estações de Rastreamento
-                    </h4>
-                    <a href="{% url 'estacao_rastreamento' %}" class="btn btn-light">
-                        <i class="fas fa-plus me-1"></i>Nova Estação
-                    </a>
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Estações de Rastreamento</h1>
+                <p class="mt-2 text-gray-600">Gerencie todas as estações de rastreamento do sistema</p>
+            </div>
+            <a href="{% url 'estacao_rastreamento_create' %}" 
+               class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors hover-lift">
+                <i class="fas fa-plus mr-2"></i>
+                Nova Estação
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-satellite text-blue-600"></i>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <!-- Statistics Cards -->
-                    <div class="row mb-4">
-                        <div class="col-md-3">
-                            <div class="card bg-primary text-white">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-list me-2"></i>Total
-                                    </h5>
-                                    <h3 class="mb-0">{{ total_estacoes }}</h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card bg-warning text-dark">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-exclamation-circle me-2"></i>Alto Risco
-                                    </h5>
-                                    <h3 class="mb-0">{{ estacoes_alto_risco }}</h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card bg-info text-white">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-desktop me-2"></i>Monitor
-                                    </h5>
-                                    <h3 class="mb-0">{{ estacoes_monitor }}</h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card bg-danger text-white">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-exclamation-triangle me-2"></i>Sem Tratamento
-                                    </h5>
-                                    <h3 class="mb-0">{{ estacoes_eventos_sem_tratamento }}</h3>
-                                </div>
-                            </div>
-                        </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total de Estações</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ object_list.count }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-check-circle text-green-600"></i>
                     </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Ativas</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ active_count|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
 
-                    <!-- Search Bar -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="fas fa-search"></i>
-                                </span>
-                                <input type="text" id="searchInput" class="form-control" placeholder="Buscar por descrição...">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <select id="tipoFilter" class="form-select">
-                                <option value="">Todos os tipos</option>
-                                <option value="Acompanhamento de Gerenci. de Risco e Logistica">Acompanhamento de Gerenci. de Risco e Logistica</option>
-                                <option value="Acompanhamento de Gerenciamento de Risco">Acompanhamento de Gerenciamento de Risco</option>
-                                <option value="Acompanhamento de Logistica">Acompanhamento de Logistica</option>
-                            </select>
-                        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-exclamation-triangle text-red-600"></i>
                     </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Alto Risco</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ high_risk_count|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
 
-                    <!-- Table -->
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">
-                                        <i class="fas fa-align-left me-1"></i>Descrição
-                                    </th>
-                                    <th scope="col">
-                                        <i class="fas fa-satellite me-1"></i>Tipo de Estação
-                                    </th>
-                                    <th scope="col">
-                                        <i class="fas fa-filter me-1"></i>Separação
-                                    </th>
-                                    <th scope="col">
-                                        <i class="fas fa-truck me-1"></i>Máx. Veículos
-                                    </th>
-                                    <th scope="col">
-                                        <i class="fas fa-cogs me-1"></i>Configurações
-                                    </th>
-                                    <th scope="col">
-                                        <i class="fas fa-calendar me-1"></i>Data Criação
-                                    </th>
-                                    <th scope="col">
-                                        <i class="fas fa-cogs me-1"></i>Ações
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for estacao in estacoes_rastreamento %}
-                                <tr>
-                                    <td>{{ estacao.id }}</td>
-                                    <td>{{ estacao.descricao }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ estacao.tipo_estacao_color }}">
-                                            {{ estacao.tipo_de_estacao_de_rastreamento }}
-                                        </span>
-                                    </td>
-                                    <td>{{ estacao.Separacao_de_rastreamento }}</td>
-                                    <td>
-                                        <span class="badge bg-secondary">
-                                            {{ estacao.Numero_maximo_de_veiculos_da_estacao }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        {% for indicator, color in estacao.status_indicators %}
-                                            <span class="badge bg-{{ color }} me-1">
-                                                {{ indicator }}
-                                            </span>
-                                        {% empty %}
-                                            <span class="text-muted">Nenhuma configuração ativa</span>
-                                        {% endfor %}
-                                    </td>
-                                    <td>
-                                        <small class="text-muted">
-                                            {{ estacao.data_criacao|date:"d/m/Y H:i" }}
-                                        </small>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-sm btn-outline-primary" 
-                                                    data-bs-toggle="modal" 
-                                                    data-bs-target="#estacaoModal{{ estacao.id }}">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <a href="{% url 'edit_estacao_rastreamento' estacao.id %}" class="btn btn-sm btn-outline-primary">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-outline-danger"
-                                                    onclick="confirmDelete({{ estacao.id }}, '{{ estacao.descricao|escapejs }}')">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-map-marker-alt text-yellow-600"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Localizações</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ locations_count|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                <!-- Modal for details -->
-                                <div class="modal fade" id="estacaoModal{{ estacao.id }}" tabindex="-1" aria-labelledby="estacaoModalLabel{{ estacao.id }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header bg-primary text-white">
-                                                <h5 class="modal-title" id="estacaoModalLabel{{ estacao.id }}">
-                                                    <i class="fas fa-info-circle me-2"></i>Detalhes da Estação de Rastreamento
-                                                </h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <div class="mb-3">
-                                                            <strong>ID:</strong> {{ estacao.id }}
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <strong>Descrição:</strong><br>
-                                                            {{ estacao.descricao }}
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <strong>Tipo de Estação:</strong>
-                                                            <span class="badge bg-{{ estacao.tipo_estacao_color }} ms-2">
-                                                                {{ estacao.tipo_de_estacao_de_rastreamento }}
-                                                            </span>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <strong>Separação de Rastreamento:</strong> {{ estacao.Separacao_de_rastreamento }}
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <strong>Nº Máximo de Veículos:</strong> {{ estacao.Numero_maximo_de_veiculos_da_estacao }}
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <strong>Configurações Ativas:</strong><br>
-                                                            {% for indicator, color in estacao.status_indicators %}
-                                                                <span class="badge bg-{{ color }} me-2 mb-2">
-                                                                    {{ indicator }}
-                                                                </span>
-                                                            {% empty %}
-                                                                <span class="text-muted">Nenhuma configuração ativa</span>
-                                                            {% endfor %}
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <strong>Data de Criação:</strong> {{ estacao.data_criacao|date:"d/m/Y H:i" }}
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <strong>Última Atualização:</strong> {{ estacao.data_atualizacao|date:"d/m/Y H:i" }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                                            </div>
-                                        </div>
-                                    </div>
+    <!-- Search and Filter -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Search -->
+            <div>
+                <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Buscar Estação</label>
+                <div class="relative">
+                    <input type="text" id="search" placeholder="Digite o nome..." 
+                           class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Type Filter -->
+            <div>
+                <label for="typeFilter" class="block text-sm font-medium text-gray-700 mb-2">Tipo de Estação</label>
+                <select id="typeFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">Todos os Tipos</option>
+                    <option value="Fixa">Fixa</option>
+                    <option value="Móvel">Móvel</option>
+                    <option value="Temporária">Temporária</option>
+                </select>
+            </div>
+
+            <!-- Clear Filters -->
+            <div class="flex items-end">
+                <button id="clearFilters" class="w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+                    <i class="fas fa-times mr-2"></i>
+                    Limpar Filtros
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estações List -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600">
+            <h2 class="text-lg font-semibold text-white">
+                <i class="fas fa-list mr-2"></i>
+                Lista de Estações de Rastreamento
+            </h2>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Estação
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Localização
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Tipo
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status
+                        </th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Ações
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for estacao in object_list %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-satellite text-blue-600"></i>
                                 </div>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="8" class="text-center text-muted">
-                                        <i class="fas fa-inbox fa-3x mb-3"></i>
-                                        <p>Nenhuma estação de rastreamento encontrada.</p>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                                <div>
+                                    <div class="text-sm font-medium text-gray-900">{{ estacao.nome }}</div>
+                                    <div class="text-sm text-gray-500">ID: {{ estacao.id }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900">{{ estacao.localizacao }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                {% if estacao.tipo == 'Fixa' %}bg-blue-100 text-blue-800
+                                {% elif estacao.tipo == 'Móvel' %}bg-green-100 text-green-800
+                                {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                                <i class="fas fa-circle mr-1 text-xs"></i>
+                                {{ estacao.tipo }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                {% if estacao.status == 'Ativa' %}bg-green-100 text-green-800
+                                {% else %}bg-red-100 text-red-800{% endif %}">
+                                <i class="fas fa-circle mr-1 text-xs"></i>
+                                {{ estacao.status }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex items-center justify-end space-x-2">
+                                <button onclick="showDetails({{ estacao.id }})" 
+                                        class="text-blue-600 hover:text-blue-900 transition-colors">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <a href="{% url 'estacao_rastreamento_update' estacao.pk %}" 
+                                   class="text-green-600 hover:text-green-900 transition-colors">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button onclick="confirmDelete({{ estacao.id }}, '{{ estacao.nome }}')" 
+                                        class="text-red-600 hover:text-red-900 transition-colors">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center">
+                            <div class="text-gray-500">
+                                <i class="fas fa-satellite text-4xl mb-4"></i>
+                                <p class="text-lg font-medium">Nenhuma estação encontrada</p>
+                                <p class="text-sm">Comece criando sua primeira estação de rastreamento</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-                    <!-- Pagination -->
-                    {% if is_paginated %}
-                    <nav aria-label="Navegação de páginas">
-                        <ul class="pagination justify-content-center">
-                            {% if page_obj.has_previous %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=1">
-                                        <i class="fas fa-angle-double-left"></i>
-                                    </a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
-                                        <i class="fas fa-angle-left"></i>
-                                    </a>
-                                </li>
-                            {% endif %}
-
-                            <li class="page-item active">
-                                <span class="page-link">
-                                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-                                </span>
-                            </li>
-
-                            {% if page_obj.has_next %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
-                                        <i class="fas fa-angle-right"></i>
-                                    </a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
-                                        <i class="fas fa-angle-double-right"></i>
-                                    </a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+            <div class="flex items-center justify-between">
+                <div class="flex-1 flex justify-between sm:hidden">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Anterior
+                        </a>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Próxima
+                        </a>
                     {% endif %}
                 </div>
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Mostrando <span class="font-medium">{{ page_obj.start_index }}</span> a <span class="font-medium">{{ page_obj.end_index }}</span> de <span class="font-medium">{{ page_obj.paginator.count }}</span> resultados
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                            {% if page_obj.has_previous %}
+                                <a href="?page={{ page_obj.previous_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            {% endif %}
+                            
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-blue-50 text-sm font-medium text-blue-600">
+                                        {{ num }}
+                                    </span>
+                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                    <a href="?page={{ num }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                        {{ num }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            {% endif %}
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Details Modal -->
+<div id="detailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-medium text-gray-900">Detalhes da Estação</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="modalContent">
+                <!-- Content will be loaded here -->
             </div>
         </div>
     </div>
@@ -275,13 +285,13 @@
 
 <script>
 // Search functionality
-document.getElementById('searchInput').addEventListener('keyup', function() {
+document.getElementById('search').addEventListener('input', function() {
     const searchTerm = this.value.toLowerCase();
-    const tableRows = document.querySelectorAll('tbody tr');
+    const rows = document.querySelectorAll('tbody tr');
     
-    tableRows.forEach(function(row) {
-        const description = row.cells[1].textContent.toLowerCase();
-        if (description.includes(searchTerm)) {
+    rows.forEach(row => {
+        const estacaoName = row.querySelector('td:first-child').textContent.toLowerCase();
+        if (estacaoName.includes(searchTerm)) {
             row.style.display = '';
         } else {
             row.style.display = 'none';
@@ -290,15 +300,16 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
 });
 
 // Type filter
-document.getElementById('tipoFilter').addEventListener('change', function() {
-    const selectedType = this.value;
-    const tableRows = document.querySelectorAll('tbody tr');
+document.getElementById('typeFilter').addEventListener('change', function() {
+    const type = this.value;
+    const rows = document.querySelectorAll('tbody tr');
     
-    tableRows.forEach(function(row) {
-        const typeCell = row.cells[2];
-        const type = typeCell.textContent.trim();
+    rows.forEach(row => {
+        const typeCell = row.querySelector('td:nth-child(3) span');
+        if (!typeCell) return;
         
-        if (selectedType === '' || type.includes(selectedType)) {
+        const rowType = typeCell.textContent.trim();
+        if (type === '' || rowType === type) {
             row.style.display = '';
         } else {
             row.style.display = 'none';
@@ -306,25 +317,46 @@ document.getElementById('tipoFilter').addEventListener('change', function() {
     });
 });
 
+// Clear filters
+document.getElementById('clearFilters').addEventListener('click', function() {
+    document.getElementById('search').value = '';
+    document.getElementById('typeFilter').value = '';
+    const rows = document.querySelectorAll('tbody tr');
+    rows.forEach(row => row.style.display = '');
+});
+
+// Modal functions
+function showDetails(estacaoId) {
+    const modal = document.getElementById('detailsModal');
+    const content = document.getElementById('modalContent');
+    
+    content.innerHTML = `
+        <div class="text-center">
+            <i class="fas fa-info-circle text-blue-500 text-4xl mb-4"></i>
+            <p class="text-gray-600">Detalhes da estação ID: ${estacaoId}</p>
+            <p class="text-sm text-gray-500 mt-2">Funcionalidade em desenvolvimento</p>
+        </div>
+    `;
+    
+    modal.classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('detailsModal').classList.add('hidden');
+}
+
 // Delete confirmation
-function confirmDelete(estacaoId, descricao) {
-    if (confirm('Tem certeza que deseja excluir a estação de rastreamento: "' + descricao + '"?')) {
-        // Create a form to submit the delete request
-        var form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/estacao_rastreamento/excluir/' + estacaoId + '/';
-        
-        // Add CSRF token
-        var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        var csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = 'csrfmiddlewaretoken';
-        csrfInput.value = csrfToken;
-        form.appendChild(csrfInput);
-        
-        document.body.appendChild(form);
-        form.submit();
+function confirmDelete(estacaoId, estacaoName) {
+    if (confirm(`Tem certeza que deseja excluir a estação "${estacaoName}"?`)) {
+        window.location.href = `/estacao_rastreamento/excluir/${estacaoId}/`;
     }
 }
+
+// Close modal when clicking outside
+document.getElementById('detailsModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
 </script>
 {% endblock %}

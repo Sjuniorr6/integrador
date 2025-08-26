@@ -1,41 +1,203 @@
-{% extends "usuarios/base.html" %}
+{% extends 'usuarios/base.html' %}
 
-{% block title %}Lista de Tecnologias{% endblock %}
+{% block title %}Tecnologias{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Tecnologias</h1>
-        <a href="{% url 'criar_tecnologia' %}" class="btn btn-primary">Nova Tecnologia</a>
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Tecnologias</h1>
+                <p class="mt-2 text-gray-600">Gerencie todas as tecnologias do sistema</p>
+            </div>
+            <a href="{% url 'criar_tecnologia' %}" 
+               class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors hover-lift">
+                <i class="fas fa-plus mr-2"></i>
+                Nova Tecnologia
+            </a>
+        </div>
     </div>
 
-    {% if page_obj %}
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-microchip text-blue-600"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total de Tecnologias</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ object_list.count }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-check-circle text-green-600"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Ativas</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ active_count|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-clock text-yellow-600"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Em Desenvolvimento</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ development_count|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-times-circle text-red-600"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Inativas</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ inactive_count|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Search -->
+            <div>
+                <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Buscar Tecnologia</label>
+                <div class="relative">
+                    <input type="text" id="search" placeholder="Digite o nome da tecnologia..." 
+                           class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Filter -->
+            <div>
+                <label for="statusFilter" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <select id="statusFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">Todos os Status</option>
+                    <option value="Ativa">Ativa</option>
+                    <option value="Em Desenvolvimento">Em Desenvolvimento</option>
+                    <option value="Inativa">Inativa</option>
+                </select>
+            </div>
+
+            <!-- Clear Filters -->
+            <div class="flex items-end">
+                <button id="clearFilters" class="w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+                    <i class="fas fa-times mr-2"></i>
+                    Limpar Filtros
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technologies List -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600">
+            <h2 class="text-lg font-semibold text-white">
+                <i class="fas fa-list mr-2"></i>
+                Lista de Tecnologias
+            </h2>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
                     <tr>
-                        <th>Nome da Conta</th>
-                        <th>IP da Integração</th>
-                        <th>Tecnologia</th>
-                        <th>Status</th>
-                        <th>Ações</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Tecnologia
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Descrição
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Categoria
+                        </th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Ações
+                        </th>
                     </tr>
                 </thead>
-                <tbody>
-                    {% for tecnologia in page_obj %}
-                    <tr>
-                        <td>{{ tecnologia.nome_da_conta }}</td>
-                        <td>{{ tecnologia.ip_da_integracao }}</td>
-                        <td>{{ tecnologia.tecnologia }}</td>
-                        <td>
-                            <span class="badge {% if tecnologia.status == 'ativo' %}bg-success{% else %}bg-secondary{% endif %}">
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for tecnologia in object_list %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-microchip text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-medium text-gray-900">{{ tecnologia.nome }}</div>
+                                    <div class="text-sm text-gray-500">ID: {{ tecnologia.id }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900 max-w-xs truncate">{{ tecnologia.descricao }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                {% if tecnologia.status == 'Ativa' %}bg-green-100 text-green-800
+                                {% elif tecnologia.status == 'Em Desenvolvimento' %}bg-yellow-100 text-yellow-800
+                                {% else %}bg-red-100 text-red-800{% endif %}">
+                                <i class="fas fa-circle mr-1 text-xs"></i>
                                 {{ tecnologia.status }}
                             </span>
                         </td>
-                        <td>
-                            <a href="{% url 'detalhar_tecnologia' tecnologia.pk %}" class="btn btn-sm btn-info">Ver</a>
-                            <a href="{% url 'editar_tecnologia' tecnologia.pk %}" class="btn btn-sm btn-warning">Editar</a>
-                            <a href="{% url 'excluir_tecnologia' tecnologia.pk %}" class="btn btn-sm btn-danger">Excluir</a>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ tecnologia.categoria }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex items-center justify-end space-x-2">
+                                <a href="{% url 'tecnologia_detail' tecnologia.pk %}" 
+                                   class="text-blue-600 hover:text-blue-900 transition-colors">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'editar_tecnologia' tecnologia.pk %}" 
+                                   class="text-green-600 hover:text-green-900 transition-colors">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button onclick="confirmDelete({{ tecnologia.id }}, '{{ tecnologia.nome }}')" 
+                                        class="text-red-600 hover:text-red-900 transition-colors">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center">
+                            <div class="text-gray-500">
+                                <i class="fas fa-microchip text-4xl mb-4"></i>
+                                <p class="text-lg font-medium">Nenhuma tecnologia encontrada</p>
+                                <p class="text-sm">Comece criando sua primeira tecnologia</p>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -43,39 +205,109 @@
             </table>
         </div>
 
+        <!-- Pagination -->
         {% if is_paginated %}
-        <nav aria-label="Paginação">
-            <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page=1">&laquo; Primeira</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
-                    </li>
-                {% endif %}
-
-                <li class="page-item active">
-                    <span class="page-link">
-                        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-                    </span>
-                </li>
-
-                {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Próxima</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
-        {% endif %}
-    {% else %}
-        <div class="alert alert-info">
-            Nenhuma tecnologia cadastrada ainda.
+        <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+            <div class="flex items-center justify-between">
+                <div class="flex-1 flex justify-between sm:hidden">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Anterior
+                        </a>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Próxima
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Mostrando <span class="font-medium">{{ page_obj.start_index }}</span> a <span class="font-medium">{{ page_obj.end_index }}</span> de <span class="font-medium">{{ page_obj.paginator.count }}</span> resultados
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                            {% if page_obj.has_previous %}
+                                <a href="?page={{ page_obj.previous_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            {% endif %}
+                            
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-blue-50 text-sm font-medium text-blue-600">
+                                        {{ num }}
+                                    </span>
+                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                    <a href="?page={{ num }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                        {{ num }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            {% endif %}
+                        </nav>
+                    </div>
+                </div>
+            </div>
         </div>
-    {% endif %}
+        {% endif %}
+    </div>
 </div>
+
+<script>
+// Search functionality
+document.getElementById('search').addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const rows = document.querySelectorAll('tbody tr');
+    
+    rows.forEach(row => {
+        const tecnologiaName = row.querySelector('td:first-child').textContent.toLowerCase();
+        if (tecnologiaName.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+
+// Status filter
+document.getElementById('statusFilter').addEventListener('change', function() {
+    const status = this.value;
+    const rows = document.querySelectorAll('tbody tr');
+    
+    rows.forEach(row => {
+        const statusCell = row.querySelector('td:nth-child(3) span');
+        if (!statusCell) return;
+        
+        const rowStatus = statusCell.textContent.trim();
+        if (status === '' || rowStatus === status) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+
+// Clear filters
+document.getElementById('clearFilters').addEventListener('click', function() {
+    document.getElementById('search').value = '';
+    document.getElementById('statusFilter').value = '';
+    const rows = document.querySelectorAll('tbody tr');
+    rows.forEach(row => row.style.display = '');
+});
+
+// Delete confirmation
+function confirmDelete(tecnologiaId, tecnologiaName) {
+    if (confirm(`Tem certeza que deseja excluir a tecnologia "${tecnologiaName}"?`)) {
+        window.location.href = `/tecnologias/${tecnologiaId}/excluir/`;
+    }
+}
+</script>
 {% endblock %}

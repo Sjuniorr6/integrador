@@ -1,0 +1,20 @@
+[1mdiff --git a/integrador/integrador/settings.py b/integrador/integrador/settings.py[m
+[1mindex 3ae07f7..4949674 100644[m
+[1m--- a/integrador/integrador/settings.py[m
+[1m+++ b/integrador/integrador/settings.py[m
+[36m@@ -37,6 +37,8 @@[m [mINSTALLED_APPS = [[m
+     'django.contrib.sessions',[m
+     'django.contrib.messages',[m
+     'django.contrib.staticfiles',[m
+[32m+[m[32m    'usuarios',[m
+[32m+[m[32m    'tecnologias',[m
+ ][m
+ [m
+ MIDDLEWARE = [[m
+[36m@@ -120,3 +122,6 @@[m [mSTATIC_URL = 'static/'[m
+ # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field[m
+ [m
+ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'[m
+[32m+[m
+[32m+[m[32m# Custom User Model[m
+[32m+[m[32mAUTH_USER_MODEL = 'usuarios.User'[m
