@@ -1,214 +1,216 @@
 {% extends 'usuarios/base.html' %}
-{% load static %}
 
-{% block title %}Cadastro de Estação de Rastreamento{% endblock %}
+{% block title %}
+    {% if form.instance.pk %}Editar Estação de Rastreamento{% else %}Nova Estação de Rastreamento{% endif %}
+{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">
-                        {% if object %}
-                            <i class="fas fa-edit me-2"></i>
-                            Editar Estação de Rastreamento
-                        {% else %}
-                            <i class="fas fa-plus-circle me-2"></i>
-                            Cadastro de Estação de Rastreamento
-                        {% endif %}
-                    </h4>
-                </div>
-                <div class="card-body">
-                    <form method="post" class="needs-validation" novalidate>
-                        {% csrf_token %}
-                        
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label for="{{ form.descricao.id_for_label }}" class="form-label">
-                                        <i class="fas fa-align-left me-1"></i>{{ form.descricao.label }}
-                                    </label>
-                                    {{ form.descricao }}
-                                    {% if form.descricao.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {% for error in form.descricao.errors %}
-                                                {{ error }}
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="{{ form.tipo_de_estacao_de_rastreamento.id_for_label }}" class="form-label">
-                                        <i class="fas fa-satellite me-1"></i>{{ form.tipo_de_estacao_de_rastreamento.label }}
-                                    </label>
-                                    {{ form.tipo_de_estacao_de_rastreamento }}
-                                    {% if form.tipo_de_estacao_de_rastreamento.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {% for error in form.tipo_de_estacao_de_rastreamento.errors %}
-                                                {{ error }}
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="{{ form.Separacao_de_rastreamento.id_for_label }}" class="form-label">
-                                        <i class="fas fa-filter me-1"></i>{{ form.Separacao_de_rastreamento.label }}
-                                    </label>
-                                    {{ form.Separacao_de_rastreamento }}
-                                    {% if form.Separacao_de_rastreamento.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {% for error in form.Separacao_de_rastreamento.errors %}
-                                                {{ error }}
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="{{ form.Numero_maximo_de_veiculos_da_estacao.id_for_label }}" class="form-label">
-                                        <i class="fas fa-truck me-1"></i>{{ form.Numero_maximo_de_veiculos_da_estacao.label }}
-                                    </label>
-                                    {{ form.Numero_maximo_de_veiculos_da_estacao }}
-                                    {% if form.Numero_maximo_de_veiculos_da_estacao.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {% for error in form.Numero_maximo_de_veiculos_da_estacao.errors %}
-                                                {{ error }}
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h5 class="text-primary mb-3">
-                                    <i class="fas fa-cogs me-2"></i>Configurações da Estação
-                                </h5>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        {{ form.Eventos_sem_tratamento }}
-                                        <label class="form-check-label" for="{{ form.Eventos_sem_tratamento.id_for_label }}">
-                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ form.Eventos_sem_tratamento.label }}
-                                        </label>
-                                        {% if form.Eventos_sem_tratamento.errors %}
-                                            <div class="invalid-feedback d-block">
-                                                {% for error in form.Eventos_sem_tratamento.errors %}
-                                                    {{ error }}
-                                                {% endfor %}
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        {{ form.Mostrar_no_monitor_de_operacoes }}
-                                        <label class="form-check-label" for="{{ form.Mostrar_no_monitor_de_operacoes.id_for_label }}">
-                                            <i class="fas fa-desktop me-1"></i>{{ form.Mostrar_no_monitor_de_operacoes.label }}
-                                        </label>
-                                        {% if form.Mostrar_no_monitor_de_operacoes.errors %}
-                                            <div class="invalid-feedback d-block">
-                                                {% for error in form.Mostrar_no_monitor_de_operacoes.errors %}
-                                                    {{ error }}
-                                                {% endfor %}
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        {{ form.Estacao_de_alto_risco }}
-                                        <label class="form-check-label" for="{{ form.Estacao_de_alto_risco.id_for_label }}">
-                                            <i class="fas fa-exclamation-circle me-1"></i>{{ form.Estacao_de_alto_risco.label }}
-                                        </label>
-                                        {% if form.Estacao_de_alto_risco.errors %}
-                                            <div class="invalid-feedback d-block">
-                                                {% for error in form.Estacao_de_alto_risco.errors %}
-                                                    {{ error }}
-                                                {% endfor %}
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        {{ form.Usar_importancia_do_evento_para_redirecionar }}
-                                        <label class="form-check-label" for="{{ form.Usar_importancia_do_evento_para_redirecionar.id_for_label }}">
-                                            <i class="fas fa-route me-1"></i>{{ form.Usar_importancia_do_evento_para_redirecionar.label }}
-                                        </label>
-                                        {% if form.Usar_importancia_do_evento_para_redirecionar.errors %}
-                                            <div class="invalid-feedback d-block">
-                                                {% for error in form.Usar_importancia_do_evento_para_redirecionar.errors %}
-                                                    {{ error }}
-                                                {% endfor %}
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{% url 'estacao_rastreamento_list' %}" class="btn btn-secondary me-md-2">
-                                <i class="fas fa-arrow-left me-1"></i>Voltar
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                {% if object %}
-                                    <i class="fas fa-save me-1"></i>Atualizar
-                                {% else %}
-                                    <i class="fas fa-save me-1"></i>Salvar
-                                {% endif %}
-                            </button>
-                        </div>
-                    </form>
-                </div>
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <!-- Header -->
+        <div class="px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600">
+            <div class="flex items-center justify-between">
+                <h1 class="text-xl font-semibold text-white">
+                    <i class="fas fa-satellite mr-2"></i>
+                    {% if form.instance.pk %}Editar Estação de Rastreamento{% else %}Nova Estação de Rastreamento{% endif %}
+                </h1>
+                <a href="{% url 'estacao_rastreamento_list' %}" 
+                   class="inline-flex items-center px-3 py-1 bg-white bg-opacity-20 hover:bg-opacity-30 text-white rounded-lg transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Voltar
+                </a>
             </div>
+        </div>
+
+        <!-- Form -->
+        <div class="p-6">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Nome -->
+                    <div>
+                        <label for="{{ form.nome.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Nome da Estação *
+                        </label>
+                        {{ form.nome }}
+                        {% if form.nome.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                {% for error in form.nome.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Localização -->
+                    <div>
+                        <label for="{{ form.localizacao.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Localização *
+                        </label>
+                        {{ form.localizacao }}
+                        {% if form.localizacao.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                {% for error in form.localizacao.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Tipo -->
+                    <div>
+                        <label for="{{ form.tipo.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Tipo de Estação *
+                        </label>
+                        {{ form.tipo }}
+                        {% if form.tipo.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                {% for error in form.tipo.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Status -->
+                    <div>
+                        <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Status *
+                        </label>
+                        {{ form.status }}
+                        {% if form.status.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                {% for error in form.status.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Capacidade -->
+                    <div>
+                        <label for="{{ form.capacidade.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Capacidade
+                        </label>
+                        {{ form.capacidade }}
+                        {% if form.capacidade.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                {% for error in form.capacidade.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Coordenadas -->
+                    <div>
+                        <label for="{{ form.coordenadas.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Coordenadas
+                        </label>
+                        {{ form.coordenadas }}
+                        {% if form.coordenadas.errors %}
+                            <div class="mt-1 text-sm text-red-600">
+                                {% for error in form.coordenadas.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Checkboxes -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="flex items-center">
+                        {{ form.Estacao_de_alto_risco }}
+                        <label for="{{ form.Estacao_de_alto_risco.id_for_label }}" class="ml-2 text-sm text-gray-700">
+                            Estação de Alto Risco
+                        </label>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        {{ form.Mostrar_no_monitor_de_operacoes }}
+                        <label for="{{ form.Mostrar_no_monitor_de_operacoes.id_for_label }}" class="ml-2 text-sm text-gray-700">
+                            Mostrar no Monitor de Operações
+                        </label>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        {{ form.Eventos_sem_tratamento }}
+                        <label for="{{ form.Eventos_sem_tratamento.id_for_label }}" class="ml-2 text-sm text-gray-700">
+                            Eventos sem Tratamento
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Descrição -->
+                <div>
+                    <label for="{{ form.descricao.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Descrição
+                    </label>
+                    {{ form.descricao }}
+                    {% if form.descricao.errors %}
+                        <div class="mt-1 text-sm text-red-600">
+                            {% for error in form.descricao.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Form Errors -->
+                {% if form.non_field_errors %}
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div class="flex">
+                            <i class="fas fa-exclamation-circle text-red-400 mt-1 mr-3"></i>
+                            <div>
+                                <h3 class="text-sm font-medium text-red-800">Erro no formulário</h3>
+                                <div class="mt-2 text-sm text-red-700">
+                                    {% for error in form.non_field_errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Buttons -->
+                <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+                    <a href="{% url 'estacao_rastreamento_list' %}" 
+                       class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+                        <i class="fas fa-times mr-2"></i>
+                        Cancelar
+                    </a>
+                    <button type="submit" 
+                            class="inline-flex items-center px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                        <i class="fas fa-save mr-2"></i>
+                        {% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %}
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
-<script>
-// Bootstrap form validation
-(function() {
-    'use strict';
-    window.addEventListener('load', function() {
-        var forms = document.getElementsByClassName('needs-validation');
-        var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('submit', function(event) {
-                if (form.checkValidity() === false) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            }, false);
-        });
-    }, false);
-})();
-</script>
+<style>
+/* Custom form styling */
+.form-control {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+}
+
+.form-control:focus {
+    @apply outline-none;
+}
+
+textarea.form-control {
+    @apply resize-none;
+    min-height: 100px;
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+    @apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2;
+}
+</style>
 {% endblock %}

@@ -1,214 +1,188 @@
 {% extends 'usuarios/base.html' %}
-{% load static %}
 
-{% block title %}
-    {% if object %}Editar Versão da Tecnologia{% else %}Nova Versão da Tecnologia{% endif %}
-{% endblock %}
+{% block title %}{% if object %}Editar{% else %}Nova{% endif %} Versão da Tecnologia{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">
-                            <i class="fas fa-microchip me-2"></i>
-                            {% if object %}Editar Versão da Tecnologia{% else %}Nova Versão da Tecnologia{% endif %}
-                        </h5>
-                        <a href="{% url 'versao_da_tecnologia_list' %}" class="btn btn-light btn-sm">
-                            <i class="fas fa-arrow-left me-1"></i>Voltar
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <form method="post" class="needs-validation" novalidate>
-                        {% csrf_token %}
-                        
-                        <div class="row">
-                            <!-- Descrição -->
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.descricao.id_for_label }}" class="form-label">
-                                    <i class="fas fa-info-circle me-1"></i>{{ form.descricao.label }}
-                                </label>
-                                {{ form.descricao }}
-                                {% if form.descricao.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {% for error in form.descricao.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            <!-- Versão -->
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.versao.id_for_label }}" class="form-label">
-                                    <i class="fas fa-tag me-1"></i>{{ form.versao.label }}
-                                </label>
-                                {{ form.versao }}
-                                {% if form.versao.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {% for error in form.versao.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- Tempo Satelital -->
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.tempo_satelital.id_for_label }}" class="form-label">
-                                    <i class="fas fa-satellite me-1"></i>{{ form.tempo_satelital.label }}
-                                </label>
-                                {{ form.tempo_satelital }}
-                                {% if form.tempo_satelital.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {% for error in form.tempo_satelital.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            <!-- Tempo GPRS -->
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.tempo_gprs.id_for_label }}" class="form-label">
-                                    <i class="fas fa-wifi me-1"></i>{{ form.tempo_gprs.label }}
-                                </label>
-                                {{ form.tempo_gprs }}
-                                {% if form.tempo_gprs.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {% for error in form.tempo_gprs.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- Tipo de Comunicação -->
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.tipo_de_comunicacao.id_for_label }}" class="form-label">
-                                    <i class="fas fa-broadcast-tower me-1"></i>{{ form.tipo_de_comunicacao.label }}
-                                </label>
-                                {{ form.tipo_de_comunicacao }}
-                                {% if form.tipo_de_comunicacao.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {% for error in form.tipo_de_comunicacao.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            <!-- Comunicação -->
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.comunicacao.id_for_label }}" class="form-label">
-                                    <i class="fas fa-network-wired me-1"></i>{{ form.comunicacao.label }}
-                                </label>
-                                {{ form.comunicacao }}
-                                {% if form.comunicacao.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {% for error in form.comunicacao.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <!-- Posições Cálculo Posicionamento -->
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.posicoes_calculo_posicionamento.id_for_label }}" class="form-label">
-                                    <i class="fas fa-map-marker-alt me-1"></i>{{ form.posicoes_calculo_posicionamento.label }}
-                                </label>
-                                {{ form.posicoes_calculo_posicionamento }}
-                                {% if form.posicoes_calculo_posicionamento.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {% for error in form.posicoes_calculo_posicionamento.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <!-- Checkboxes -->
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                <div class="card bg-light">
-                                    <div class="card-body">
-                                        <h6 class="card-title">
-                                            <i class="fas fa-check-circle me-1"></i>Configurações de Homologação
-                                        </h6>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-check">
-                                                    {{ form.homologado_para_risco }}
-                                                    <label class="form-check-label" for="{{ form.homologado_para_risco.id_for_label }}">
-                                                        {{ form.homologado_para_risco.label }}
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-check">
-                                                    {{ form.homologado_para_logistica }}
-                                                    <label class="form-check-label" for="{{ form.homologado_para_logistica.id_for_label }}">
-                                                        {{ form.homologado_para_logistica.label }}
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-check">
-                                                    {{ form.permitir_mensagem_livre }}
-                                                    <label class="form-check-label" for="{{ form.permitir_mensagem_livre.id_for_label }}">
-                                                        {{ form.permitir_mensagem_livre.label }}
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-end gap-2">
-                            <a href="{% url 'versao_da_tecnologia_list' %}" class="btn btn-secondary">
-                                <i class="fas fa-times me-1"></i>Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i>
-                                {% if object %}Atualizar{% else %}Salvar{% endif %}
-                            </button>
-                        </div>
-                    </form>
-                </div>
+<div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">
+                    {% if object %}Editar{% else %}Nova{% endif %} Versão da Tecnologia
+                </h1>
+                <p class="mt-2 text-gray-600">
+                    {% if object %}
+                        Atualize as informações da versão da tecnologia
+                    {% else %}
+                        Cadastre uma nova versão da tecnologia no sistema
+                    {% endif %}
+                </p>
             </div>
+            <a href="{% url 'versao_da_tecnologia_list' %}" 
+               class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Voltar
+            </a>
         </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 bg-gradient-to-r from-indigo-500 to-indigo-600">
+            <h2 class="text-lg font-semibold text-white">
+                <i class="fas fa-code-branch mr-2"></i>
+                Informações da Versão da Tecnologia
+            </h2>
+        </div>
+        
+        <form method="post" class="p-6 space-y-6">
+            {% csrf_token %}
+            
+            <!-- Nome Field -->
+            <div>
+                <label for="{{ form.nome.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.nome.label }}
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-tag text-gray-400"></i>
+                    </div>
+                    {{ form.nome }}
+                </div>
+                {% if form.nome.errors %}
+                    <div class="mt-1 text-red-600 text-sm">{{ form.nome.errors.0 }}</div>
+                {% endif %}
+                <p class="mt-1 text-sm text-gray-500">
+                    Digite um nome descritivo para a versão
+                </p>
+            </div>
+
+            <!-- Descrição Field -->
+            <div>
+                <label for="{{ form.descricao.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.descricao.label }}
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-file-alt text-gray-400"></i>
+                    </div>
+                    {{ form.descricao }}
+                </div>
+                {% if form.descricao.errors %}
+                    <div class="mt-1 text-red-600 text-sm">{{ form.descricao.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Versão Field -->
+            <div>
+                <label for="{{ form.versao.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.versao.label }}
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-code-branch text-gray-400"></i>
+                    </div>
+                    {{ form.versao }}
+                </div>
+                {% if form.versao.errors %}
+                    <div class="mt-1 text-red-600 text-sm">{{ form.versao.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Tipo Comunicação Field -->
+            <div>
+                <label for="{{ form.tipo_comunicacao.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.tipo_comunicacao.label }}
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-wifi text-gray-400"></i>
+                    </div>
+                    {{ form.tipo_comunicacao }}
+                </div>
+                {% if form.tipo_comunicacao.errors %}
+                    <div class="mt-1 text-red-600 text-sm">{{ form.tipo_comunicacao.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Homologado Risco Field -->
+            <div>
+                <label for="{{ form.homologado_risco.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.homologado_risco.label }}
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-shield-alt text-gray-400"></i>
+                    </div>
+                    {{ form.homologado_risco }}
+                </div>
+                {% if form.homologado_risco.errors %}
+                    <div class="mt-1 text-red-600 text-sm">{{ form.homologado_risco.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Homologado Logística Field -->
+            <div>
+                <label for="{{ form.homologado_logistica.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.homologado_logistica.label }}
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-truck text-gray-400"></i>
+                    </div>
+                    {{ form.homologado_logistica }}
+                </div>
+                {% if form.homologado_logistica.errors %}
+                    <div class="mt-1 text-red-600 text-sm">{{ form.homologado_logistica.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Status Field -->
+            <div>
+                <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.status.label }}
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-toggle-on text-gray-400"></i>
+                    </div>
+                    {{ form.status }}
+                </div>
+                {% if form.status.errors %}
+                    <div class="mt-1 text-red-600 text-sm">{{ form.status.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+                <a href="{% url 'versao_da_tecnologia_list' %}" 
+                   class="px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+                    Cancelar
+                </a>
+                <button type="submit" 
+                        class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors hover-lift">
+                    <i class="fas fa-save mr-2"></i>
+                    {% if object %}Atualizar{% else %}Salvar{% endif %}
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
-<script>
-// Bootstrap form validation
-(function() {
-    'use strict';
-    window.addEventListener('load', function() {
-        var forms = document.getElementsByClassName('needs-validation');
-        var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('submit', function(event) {
-                if (form.checkValidity() === false) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            }, false);
-        });
-    }, false);
-})();
-</script>
+<style>
+/* Custom form styling */
+input, select, textarea {
+    @apply w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors;
+}
+
+input:focus, select:focus, textarea:focus {
+    @apply outline-none;
+}
+
+/* Error state */
+input.error, select.error, textarea.error {
+    @apply border-red-500 focus:ring-red-500 focus:border-red-500;
+}
+</style>
 {% endblock %}

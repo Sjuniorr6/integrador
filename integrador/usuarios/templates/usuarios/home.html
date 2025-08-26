@@ -1,88 +1,302 @@
 {% extends 'usuarios/base.html' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard - Sistema Integrador{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card shadow">
-            <div class="card-header bg-info text-white">
-                <h3 class="mb-0">
-                    <i class="fas fa-tachometer-alt me-2"></i>
-                    Dashboard do Usuário
-                </h3>
-            </div>
-            <div class="card-body">
-                <div class="text-center mb-4">
-                    <i class="fas fa-user-circle fa-4x text-primary mb-3"></i>
-                    <h4>Olá, {{ user.nome }}!</h4>
-                    <p class="text-muted">Bem-vindo ao seu dashboard.</p>
+<div class="max-w-7xl mx-auto">
+    <!-- Welcome Section -->
+    <div class="mb-8">
+        <div class="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl shadow-lg p-8 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">
+                        Bem-vindo, {{ user.nome }}! 👋
+                    </h1>
+                    <p class="text-primary-100 text-lg">
+                        Gerencie seus dados e monitore o sistema de forma eficiente
+                    </p>
                 </div>
-                
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card bg-light">
-                            <div class="card-body text-center">
-                                <i class="fas fa-user fa-2x text-success mb-2"></i>
-                                <h5>Seu Perfil</h5>
-                                <p class="text-muted">Email: {{ user.email }}</p>
-                                <p class="text-muted">Membro desde: {{ user.created_at|date:"d/m/Y" }}</p>
-                                <p class="text-muted">Última atualização: {{ user.updated_at|date:"d/m/Y H:i" }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card bg-light">
-                            <div class="card-body text-center">
-                                <i class="fas fa-users fa-2x text-info mb-2"></i>
-                                <h5>Estatísticas</h5>
-                                <p class="text-muted">Total de usuários: {{ user_count }}</p>
-                                <p class="text-muted">Status: 
-                                    {% if user.is_active %}
-                                        <span class="badge bg-success">Ativo</span>
-                                    {% else %}
-                                        <span class="badge bg-warning">Inativo</span>
-                                    {% endif %}
-                                </p>
-                                {% if user.is_staff %}
-                                    <p class="text-muted">
-                                        <span class="badge bg-primary">Staff</span>
-                                    </p>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card bg-light">
-                            <div class="card-body text-center">
-                                <h5>Ações Rápidas</h5>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <a href="{% url 'admin:index' %}" class="btn btn-outline-primary">
-                                            <i class="fas fa-cogs me-1"></i>Admin
-                                        </a>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <a href="{% url 'usuarios:register' %}" class="btn btn-outline-success">
-                                            <i class="fas fa-user-plus me-1"></i>Novo Usuário
-                                        </a>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <a href="{% url 'admin:logout' %}" class="btn btn-outline-danger">
-                                            <i class="fas fa-sign-out-alt me-1"></i>Sair
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="hidden md:block">
+                    <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-chart-line text-3xl"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover-lift">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-users text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Usuários Ativos</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ total_users|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover-lift">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-microchip text-green-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Tecnologias</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ total_technologies|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover-lift">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Eventos</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ total_events|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover-lift">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-fish text-purple-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Estoque</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ total_stock|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Recent Activities -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">
+                    <i class="fas fa-clock mr-2 text-primary-600"></i>
+                    Atividades Recentes
+                </h2>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-plus text-green-600 text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900">Nova entrada de iscas registrada</p>
+                            <p class="text-sm text-gray-500">Cliente: Empresa ABC - 500 unidades</p>
+                            <p class="text-xs text-gray-400">Há 2 horas</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-edit text-blue-600 text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900">Tecnologia atualizada</p>
+                            <p class="text-sm text-gray-500">GPS Tracker v2.1 - Melhorias de performance</p>
+                            <p class="text-xs text-gray-400">Há 4 horas</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-exclamation text-yellow-600 text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900">Alerta de estoque baixo</p>
+                            <p class="text-sm text-gray-500">Cliente: Empresa XYZ - Estoque crítico</p>
+                            <p class="text-xs text-gray-400">Há 6 horas</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user-plus text-purple-600 text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900">Novo usuário cadastrado</p>
+                            <p class="text-sm text-gray-500">João Silva - Operador de Sistema</p>
+                            <p class="text-xs text-gray-400">Há 1 dia</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Access -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">
+                    <i class="fas fa-bolt mr-2 text-primary-600"></i>
+                    Acesso Rápido
+                </h2>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="{% url 'lista_tecnologias' %}" 
+                       class="group p-4 bg-gray-50 rounded-lg hover:bg-primary-50 transition-colors">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                                <i class="fas fa-microchip text-blue-600"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-900 group-hover:text-primary-700">Tecnologias</p>
+                                <p class="text-xs text-gray-500">Gerenciar</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="{% url 'versao_da_tecnologia_list' %}" 
+                       class="group p-4 bg-gray-50 rounded-lg hover:bg-primary-50 transition-colors">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors">
+                                <i class="fas fa-code-branch text-green-600"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-900 group-hover:text-primary-700">Versões</p>
+                                <p class="text-xs text-gray-500">Visualizar</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="{% url 'Motivo_list' %}" 
+                       class="group p-4 bg-gray-50 rounded-lg hover:bg-primary-50 transition-colors">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center group-hover:bg-yellow-200 transition-colors">
+                                <i class="fas fa-exclamation-triangle text-yellow-600"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-900 group-hover:text-primary-700">Motivos</p>
+                                <p class="text-xs text-gray-500">Configurar</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="{% url 'estoque:entrada_list' %}" 
+                       class="group p-4 bg-gray-50 rounded-lg hover:bg-primary-50 transition-colors">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+                                <i class="fas fa-fish text-purple-600"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-gray-900 group-hover:text-primary-700">Estoque</p>
+                                <p class="text-xs text-gray-500">Controlar</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Status -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">
+                <i class="fas fa-server mr-2 text-primary-600"></i>
+                Status do Sistema
+            </h2>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900">Sistema Online</h3>
+                    <p class="text-sm text-gray-500">Todos os serviços funcionando</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-database text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900">Banco de Dados</h3>
+                    <p class="text-sm text-gray-500">Conectado e sincronizado</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-shield-alt text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900">Segurança</h3>
+                    <p class="text-sm text-gray-500">Proteção ativa</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+/* Custom animations for dashboard elements */
+.dashboard-card {
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Pulse animation for status indicators */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.status-pulse {
+    animation: pulse 2s infinite;
+}
+</style>
+
+<script>
+// Add staggered animations to dashboard elements
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.bg-white');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.classList.add('fade-in');
+    });
+});
+
+// Add hover effects to quick access cards
+document.querySelectorAll('.group').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-2px)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+    });
+});
+</script>
 {% endblock %}
 
