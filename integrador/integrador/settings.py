@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'cadastro_de_tipo_nao_conformidade',
     'cadastro_de_tratamento_de_evento',
     'versao_da_tecnologia',
-    'entrada_de_iscas'
+    'entrada_de_iscas',
+    'embarcador',
+    
 ]
 
 MIDDLEWARE = [
