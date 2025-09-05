@@ -46,7 +46,16 @@ INSTALLED_APPS = [
     'versao_da_tecnologia',
     'entrada_de_iscas',
     'embarcador',
-    
+    'pessoa_fisica',
+    'status_operacional',
+    'carreta',
+    'cavalo',
+    'moto',
+    'nao_conformidade_veiculo',
+    'cadastro_rastreador',
+    'tipo_segmento',
+    'truck',
+    'utilitario_carga',
 ]
 
 MIDDLEWARE = [
