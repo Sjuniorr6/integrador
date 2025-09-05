@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
+from django.urls import path, include
 
 def redirect_to_login(request):
     """Redireciona a página raiz para o login"""
@@ -33,5 +34,16 @@ urlpatterns = [
     path('cadastro_de_tratamento_de_evento/', include('cadastro_de_tratamento_de_evento.urls')),
     path('versao_da_tecnologia/', include('versao_da_tecnologia.urls')),
     path('entrada_de_iscas/', include('entrada_de_iscas.urls')),
+    path("pessoas/", include("pessoa_fisica.urls")),
+    path("status-operacional/", include("status_operacional.urls")),
+    path("carreta/", include("carreta.urls")),
+    path("cavalos/", include("cavalo.urls")),
+    path("motos/", include("moto.urls")),
+    path("nao-conformidades-veiculo/", include("nao_conformidade_veiculo.urls")),
+    path("rastreadores/", include("cadastro_rastreador.urls")),
+    path('tipo-segmento/', include('tipo_segmento.urls')),
+    path("trucks/", include("truck.urls")),
+    path('utilitario-carga/', include('utilitario_carga.urls', namespace='utilitario_carga')),
+
 ]
 

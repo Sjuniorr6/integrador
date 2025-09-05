@@ -85,3 +85,5 @@ class EstacaoRastreamento(models.Model):
         if self.Usar_importancia_do_evento_para_redirecionar:
             indicators.append(("Redirecionamento por Importância", "success"))
         return indicators
+    
+    
